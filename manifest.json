@@ -1,0 +1,6 @@
+{
+  "name": "memory_core",
+  "auto_deploy": false,
+  "safety_checks": true,
+  "pause_enabled": true
+}
