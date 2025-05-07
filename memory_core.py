@@ -1,8 +1,7 @@
-# memory_core module
+# memory_core with local snapshot endpoint
 
 from datetime import datetime
 
-# In-memory structure for now (could extend to file or DB)
 memory = []
 
 def log(type: str, context: str, content: str) -> dict:
@@ -26,6 +25,14 @@ def clear(context: str = None) -> str:
     memory = []
     return "Cleared all memory"
 
+def snapshot(_: str = None) -> dict:
+    return {
+        "count": len(memory),
+        "types": sorted(set(m['type'] for m in memory)),
+        "contexts": sorted(set(m['context'] for m in memory)),
+        "sample": memory[0] if memory else {}
+    }
+
 def run(payload: dict) -> dict:
     action = payload.get("action")
     if action == "log":
@@ -34,4 +41,6 @@ def run(payload: dict) -> dict:
         return {"results": retrieve(payload.get("type"), payload.get("context"))}
     elif action == "clear":
         return {"message": clear(payload.get("context"))}
+    elif action == "snapshot":
+        return snapshot()
     return {"error": "Unknown action"}
